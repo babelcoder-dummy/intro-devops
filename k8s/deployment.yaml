@@ -5,7 +5,7 @@ metadata:
   labels:
     app: site
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: site
@@ -33,7 +33,7 @@ metadata:
   labels:
     app: api
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: api
@@ -77,7 +77,7 @@ metadata:
   labels:
     app: db
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: db
