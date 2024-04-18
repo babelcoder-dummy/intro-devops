@@ -29,16 +29,7 @@ services:
     image: babelcoder/intro-to-devops-ui:1.0
     ports:
       - 5151:80
-    labels:
-      com.datadoghq.ad.check_names: '["site"]'
-      com.datadoghq.ad.init_configs: "[{}]"
-      com.datadoghq.ad.instances: '[{"host":"%%host%%", "port": "%%port%%"}]'
-      com.datadoghq.ad.logs: '[{"source": "go", "service": "go"}]'
-      com.datadoghq.tags.env: "prod"
-      com.datadoghq.tags.service: "site"
-      com.datadoghq.tags.version: "1.0"
     depends_on:
-      - datadog
       - db
   api:
     build:
@@ -58,7 +49,7 @@ services:
       com.datadoghq.ad.check_names: '["api"]'
       com.datadoghq.ad.init_configs: "[{}]"
       com.datadoghq.ad.instances: '[{"host":"%%host%%", "port": "%%port%%"}]'
-      com.datadoghq.ad.logs: '[{"source": "go", "service": "go"}]'
+      com.datadoghq.ad.logs: '[{"source": "api", "service": "api"}]'
       com.datadoghq.tags.env: "prod"
       com.datadoghq.tags.service: "api"
       com.datadoghq.tags.version: "1.0"
@@ -82,22 +73,14 @@ services:
     image: gcr.io/datadoghq/agent:7
     restart: always
     environment:
-      - DD_API_KEY=c81908029334047c071e4e2148c42151
+      - DD_API_KEY=431176c0b163654285e8cddfb96041d2
       - DD_SITE=ap1.datadoghq.com
-      - DD_HOSTNAME=datadog
-      - DD_APM_ENABLED=true
-      - DD_APM_NON_LOCAL_TRAFFIC=true
-      # - DD_APM_RECEIVER_SOCKET=/opt/datadog/apm/inject/run/apm.socket
       - DD_LOGS_ENABLED=true
       - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
-      # - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
-      - DD_CONTAINER_EXCLUDE=image:gcr.io/datadoghq/agent*
-      - DD_CONTAINER_EXCLUDE_METRICS=image:gcr.io/datadoghq/agent*
-      - DD_CONTAINER_EXCLUDE_LOGS=image:gcr.io/datadoghq/agent*
-      - DD_DOGSTATSD_SOCKET=/opt/datadog/apm/inject/run/dsd.socket
+      - DD_CONTAINER_EXCLUDE=name:datadog-agent
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # - /proc/:/host/proc/:ro
-      # - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
-      - \\.\pipe\docker_engine:\\.\pipe\docker_engine
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /opt/datadog-agent/run:/opt/datadog-agent/run:rw

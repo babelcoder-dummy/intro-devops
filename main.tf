@@ -39,3 +39,7 @@ resource "digitalocean_project" "terraform" {
     "${digitalocean_droplet.my-node.urn}"
   ]
 }
+
+output "droplet_ip" {
+  value = digitalocean_droplet.my-node.ipv4_address
+}
